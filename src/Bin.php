@@ -5,8 +5,14 @@ class Bin {
 
   //@var array respresents both staging and production server url
   private static $url = [
-    "staging" => "http://staging1flutterwave.co:8080/pwc/rest/fw/check/",
-    "production" => "https://prod1flutterwave.co:8181/pwc/rest/fw/check/"
+    "v1" => [
+      "staging" => "http://staging1flutterwave.co:8080/pwc/rest/fw/check/",
+      "production" => "https://prod1flutterwave.co:8181/pwc/rest/fw/check/"
+    ],
+    "v2" => [
+      "staging" => "https://flutterwavestagingv2.com/pwc/rest/fw/check/",
+      "production" => "https://flutterwaveprodv2.com/pwc/rest/fw/check/"
+    ]
   ];
 
   /**
@@ -15,7 +21,7 @@ class Bin {
   * @return ApiResponse
   */
   public static function check($first6digits) {
-    $resource = self::$url[Flutterwave::getEnv()];
+    $resource = self::$url[Flutterwave::getVersionName()][Flutterwave::getEnv()];
     return (new ApiRequest($resource))
             ->addBody("card6", $first6digits)
             ->makePostRequest();

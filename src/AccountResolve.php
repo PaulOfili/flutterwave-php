@@ -10,11 +10,21 @@ class AccountResolve {
    * @var [type]
    */
   private static $accountResolveResources = [
-    "staging" => [
-      "resolve" => "http://staging1flutterwave.co:8080/pwc/rest/pay/resolveaccount/"
+    "v1" => [
+      "staging" => [
+        "resolve" => "http://staging1flutterwave.co:8080/pwc/rest/pay/resolveaccount/"
+      ],
+      "production" => [
+        "resolve" => "https://prod1flutterwave.co:8181/pwc/rest/pay/resolveaccount/"
+      ]
     ],
-    "production" => [
-      "resolve" => "https://prod1flutterwave.co:8181/pwc/rest/pay/resolveaccount/"
+    "v2" => [
+      "staging" => [
+        "resolve" => "https://flutterwavestagingv2.com/pwc/rest/pay/resolveaccount/"
+      ],
+      "production" => [
+        "resolve" => "https://flutterwaveprodv2.com/pwc/rest/pay/resolveaccount/"
+      ]
     ]
   ];
 
@@ -31,7 +41,7 @@ class AccountResolve {
     $bankCode = FlutterEncrypt::encrypt3Des($bankCode, $key);
     $accountNum = FlutterEncrypt::encrypt3Des($accountNum, $key);
 
-    $resource = self::$accountResolveResources[Flutterwave::getEnv()]['resolve'];
+    $resource = self::$accountResolveResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]['resolve'];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->addBody("destbankcode", $bankCode)

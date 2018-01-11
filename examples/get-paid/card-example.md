@@ -25,8 +25,7 @@ use Flutterwave\FlutterEncrypt;
 $merchantKey = "744hdhhg"; //merchant key on flutterwave dev portal
 $apiKey = "58jdjdjd"; //merchant api key on flutterwave dev portal
 $env = "staging"; //can be staging or production
-Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env);
-
+Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env, $version); //version is optional and can be 1 or 2, when not passed, it defaults to 1
 $card = [
   "card_no" => "",
   "cvv" => "",
@@ -65,7 +64,7 @@ use Flutterwave\FlutterEncrypt;
 $merchantKey = "744hdhhg"; //merchant key on flutterwave dev portal
 $apiKey = "58jdjdjd"; //merchant api key on flutterwave dev portal
 $env = "staging"; //can be staging or production
-Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env);
+Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env, $version); //version is optional and can be 1 or 2, when not passed, it defaults to 1
 
 $card = [
   "card_no" => "",
@@ -140,7 +139,7 @@ use Flutterwave\FlutterEncrypt;
 $merchantKey = "744hdhhg"; //merchant key on flutterwave dev portal
 $apiKey = "58jdjdjd"; //merchant api key on flutterwave dev portal
 $env = "staging"; //can be staging or production
-Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env);
+Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env, $version); //version is optional and can be 1 or 2, when not passed, it defaults to 1
 
 //this operation will put an hold on the $amount
 //to perform this operation you need to have first tokenized the card
@@ -164,7 +163,7 @@ use Flutterwave\FlutterEncrypt;
 $merchantKey = ""; //can be found on flutterwave dev portal
 $apiKey = ""; //can be found on flutterwave dev portal
 $env = "staging"; //this can be production when ready for deployment
-Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env);
+Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env, $version); //version is optional and can be 1 or 2, when not passed, it defaults to 1
 
 $authRef = ""; //in the preauthorize() call the response returns a reference, use it here
 $transId = ""; //in the preauthorize() call the response returns a transaction id, use it here
@@ -186,7 +185,7 @@ use Flutterwave\Currencies;
 use Flutterwave\Countries;
 use Flutterwave\FlutterEncrypt;
 
-Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env);
+Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env, $version); //version is optional and can be 1 or 2, when not passed, it defaults to 1
 
 $authRef = ""; //in the preauthorize() call the response returns a reference, use it here
 $transId = ""; //in the preauthorize() call the response returns a transaction id, use it here
@@ -208,7 +207,7 @@ use Flutterwave\Currencies;
 use Flutterwave\Countries;
 use Flutterwave\FlutterEncrypt;
 
-Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env);
+Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env, $version); //version is optional and can be 1 or 2, when not passed, it defaults to 1
 
 $authRef = ""; //in the preauthorize() call the response returns a reference, use it here
 $transId = ""; //in the preauthorize() call the response returns a transaction id, use it here
@@ -230,7 +229,7 @@ use Flutterwave\Currencies;
 use Flutterwave\Countries;
 use Flutterwave\FlutterEncrypt;
 
-Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env);
+Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env, $version); //version is optional and can be 1 or 2, when not passed, it defaults to 1
 
 $card = [
   "card_no" => "",

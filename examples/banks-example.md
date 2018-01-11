@@ -10,7 +10,7 @@ use Flutterwave\Flutterwave;
 $merchantKey = ""; //can be found on flutterwave dev portal
 $apiKey = ""; //can be found on flutterwave dev portal
 $env = "staging"; //this can be production when ready for deployment
-Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env);
+Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env, $version); //version is optional and can be 1 or 2, when not passed, it defaults to 1
 
 $result = Banks::allBanks();
 //$result is an instance of ApiResponse class which has

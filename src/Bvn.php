@@ -10,15 +10,29 @@ class Bvn {
 
   //@var array resources
   private static $bvnResources = [
-    "staging" => [
-      "verify" => "http://staging1flutterwave.co:8080/pwc/rest/bvn/verify/",
-      "validate" => "http://staging1flutterwave.co:8080/pwc/rest/bvn/validate/",
-      "resendOtp" => "http://staging1flutterwave.co:8080/pwc/rest/bvn/resendotp/"
+    "v1" => [
+      "staging" => [
+        "verify" => "http://staging1flutterwave.co:8080/pwc/rest/bvn/verify/",
+        "validate" => "http://staging1flutterwave.co:8080/pwc/rest/bvn/validate/",
+        "resendOtp" => "http://staging1flutterwave.co:8080/pwc/rest/bvn/resendotp/"
+      ],
+      "production" => [
+        "verify" => "https://prod1flutterwave.co:8181/pwc/rest/bvn/verify/",
+        "validate" => "https://prod1flutterwave.co:8181/pwc/rest/bvn/validate/",
+        "resendOtp" => "https://prod1flutterwave.co:8181/pwc/rest/bvn/resendotp/"
+      ]
     ],
-    "production" => [
-      "verify" => "https://prod1flutterwave.co:8181/pwc/rest/bvn/verify/",
-      "validate" => "https://prod1flutterwave.co:8181/pwc/rest/bvn/validate/",
-      "resendOtp" => "https://prod1flutterwave.co:8181/pwc/rest/bvn/resendotp/"
+    "v2" => [
+      "staging" => [
+        "verify" => "https://flutterwavestagingv2.com/pwc/rest/bvn/verify/",
+        "validate" => "https://flutterwavestagingv2.com/pwc/rest/bvn/validate/",
+        "resendOtp" => "https://flutterwavestagingv2.com/pwc/rest/bvn/resendotp/"
+      ],
+      "production" => [
+        "verify" => "https://flutterwaveprodv2.com/pwc/rest/bvn/verify/",
+        "validate" => "https://flutterwaveprodv2.com/pwc/rest/bvn/validate/",
+        "resendOtp" => "https://flutterwaveprodv2.com/pwc/rest/bvn/resendotp/"
+      ]
     ]
   ];
 
@@ -31,7 +45,7 @@ class Bvn {
   */
   public static function verify($bvn, $otpOption = Flutterwave::SMS) {
     FlutterValidator::validateClientCredentialsSet();
-    $resource = self::$bvnResources[Flutterwave::getEnv()]["verify"];
+    $resource = self::$bvnResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["verify"];
     $encryptedOtpOption = FlutterEncrypt::encrypt3Des($otpOption, Flutterwave::getApiKey());
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
@@ -49,7 +63,7 @@ class Bvn {
    */
   public static function validate($bvn, $otp, $transactionRef) {
     FlutterValidator::validateClientCredentialsSet();
-    $resource = self::$bvnResources[Flutterwave::getEnv()]["validate"];
+    $resource = self::$bvnResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["validate"];
     $encryptedBvn = FlutterEncrypt::encrypt3Des($bvn, Flutterwave::getApiKey());
     $encryptedRef = FlutterEncrypt::encrypt3Des($transactionRef, Flutterwave::getApiKey());
     $encryptedOtp = FlutterEncrypt::encrypt3Des($otp, Flutterwave::getApiKey());
@@ -72,7 +86,7 @@ class Bvn {
     FlutterValidator::validateClientCredentialsSet();
     $encryptedRef = FlutterEncrypt::encrypt3Des($transactionRef, Flutterwave::getApiKey());
     $encryptedOption = FlutterEncrypt::encrypt3Des($otpOption, Flutterwave::getApiKey());
-    $resource = self::$bvnResources[Flutterwave::getEnv()]["resendOtp"];
+    $resource = self::$bvnResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["resendOtp"];
     $resp = (new ApiRequest($resource))
               ->addBody("validateoption", $encryptedOption)
               ->addBody("transactionreference", $encryptedRef)

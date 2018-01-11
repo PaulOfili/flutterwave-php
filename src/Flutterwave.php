@@ -23,12 +23,15 @@ class Flutterwave {
   //@var string represents the development environment as either staging or production
   private static $env = "staging";
 
+  //@var string represents the version to be used as either 1 or 2
+  private static $version = "1";
+
   /**
   * construct the Flutterwave client
   * @param string $merchantKey
   * @param string $apiKey
   */
-  public static function setMerchantCredentials($merchantKey, $apiKey, $env = "staging") {
+  public static function setMerchantCredentials($merchantKey, $apiKey, $env = "staging", $version = "1") {
     if (empty($merchantKey)) {
       throw new \InvalidArgumentException("Merchant key can not be empty");
     }
@@ -41,9 +44,14 @@ class Flutterwave {
       throw new \InvalidArgumentException("env variable can only be `staging` or `production`");
     }
 
+    if (empty($version) || ($version !== "1" && $version !== "2")) {
+      throw new \InvalidArgumentException("version variable can only be `1` or `2`");
+    }
+
     self::$merchantKey = $merchantKey;
     self::$apiKey = $apiKey;
     self::$env = $env;
+    self::$version = $version;
   }
 
   /**
@@ -68,5 +76,21 @@ class Flutterwave {
   */
   public static function getEnv() {
     return self::$env;
+  }
+
+  /**
+  * get version name. It can either be 1 or 2
+  * @return string $version
+  */
+  public static function getVersion() {
+    return self::$version;
+  }
+
+  /**
+  * get version name with 'v' prefix.
+  * @return string $version
+  */
+  public static function getVersionName() {
+    return 'v' . self::$version;
   }
 }

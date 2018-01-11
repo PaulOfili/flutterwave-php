@@ -5,25 +5,49 @@ use Flutterwave\FlutterValidator;
 
 class Card {
   private static $resources = [
-    "staging" => [
-      'tokenize' => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/tokenize/",
-      'charge' => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/pay/",
-      'validate' => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/pay/validate/",
-      "preauth" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/preauthorize/",
-      "capture" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/capture/",
-      "refund" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/refund/",
-      "avs" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/avs/pay",
-      "status" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/status"
+    "v1" => [
+      "staging" => [
+        'tokenize' => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/tokenize/",
+        'charge' => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/pay/",
+        'validate' => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/pay/validate/",
+        "preauth" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/preauthorize/",
+        "capture" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/capture/",
+        "refund" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/refund/",
+        "avs" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/avs/pay",
+        "status" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/status"
+      ],
+      "production" => [
+        'tokenize' => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/tokenize/",
+        'charge' => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/pay/",
+        'validate' => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/pay/validate/",
+        "preauth" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/preauthorize/",
+        "capture" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/capture/",
+        "refund" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/refund/",
+        "avs" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/avs/pay",
+        "status" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/status"
+      ]
     ],
-    "production" => [
-      'tokenize' => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/tokenize/",
-      'charge' => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/pay/",
-      'validate' => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/pay/validate/",
-      "preauth" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/preauthorize/",
-      "capture" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/capture/",
-      "refund" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/refund/",
-      "avs" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/avs/pay",
-      "status" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/status"
+    "v2" => [
+      "staging" => [
+        'tokenize' => "https://flutterwavestagingv2.com/pwc/rest/card/mvva/tokenize/",
+        'charge' => "https://flutterwavestagingv2.com/pwc/rest/card/mvva/pay/",
+        'validate' => "https://flutterwavestagingv2.com/pwc/rest/card/mvva/pay/validate/",
+        "preauth" => "https://flutterwavestagingv2.com/pwc/rest/card/mvva/preauthorize/",
+        "capture" => "https://flutterwavestagingv2.com/pwc/rest/card/mvva/capture/",
+        "refund" => "https://flutterwavestagingv2.com/pwc/rest/card/mvva/refund/",
+        "avs" => "https://flutterwavestagingv2.com/pwc/rest/card/mvva/avs/pay",
+        "status" => "https://flutterwavestagingv2.com/pwc/rest/card/mvva/status"
+      ],
+      "production" => [
+        'tokenize' => "https://flutterwaveprodv2.com/pwc/rest/card/mvva/tokenize/",
+        'charge' => "https://flutterwaveprodv2.com/pwc/rest/card/mvva/pay/",
+        'validate' => "https://flutterwaveprodv2.com/pwc/rest/card/mvva/pay/validate/",
+        "preauth" => "https://flutterwaveprodv2.com/pwc/rest/card/mvva/preauthorize/",
+        "capture" => "https://flutterwaveprodv2.com/pwc/rest/card/mvva/capture/",
+        "refund" => "https://flutterwaveprodv2.com/pwc/rest/card/mvva/refund/",
+        "avs" => "https://flutterwaveprodv2.com/pwc/rest/card/mvva/avs/pay",
+        "status" => "https://flutterwaveprodv2.com/pwc/rest/card/mvva/status"
+      ]
     ]
   ];
 
@@ -50,7 +74,7 @@ class Card {
 
     $merchantKey = Flutterwave::getMerchantKey();
 
-    $resource = self::$resources[Flutterwave::getEnv()]['tokenize'];
+    $resource = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]['tokenize'];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", $merchantKey)
               ->addBody("cardno", $cardNo)
@@ -91,10 +115,6 @@ class Card {
     $expiryMonth = FlutterEncrypt::encrypt3Des($card['expiry_month'], $key);
     $expiryYear = FlutterEncrypt::encrypt3Des($card['expiry_year'], $key);
     $country = FlutterEncrypt::encrypt3Des($country, $key);
-    $cardType = "";
-    if (isset($card['card_type']) && !empty($card['card_type'])) {
-      $cardType = FlutterEncrypt::encrypt3Des($card['card_type'], $key);
-    }
     $pin = "";
     if(isset($card['pin']) && !empty($card['pin'])){
       $pin = FlutterEncrypt::encrypt3Des($card['pin'], $key);
@@ -106,7 +126,7 @@ class Card {
     $cvv = FlutterEncrypt::encrypt3Des($card['cvv'], $key);
     $merchantKey = Flutterwave::getMerchantKey();
 
-    $resource = self::$resources[Flutterwave::getEnv()]['charge'];
+    $resource = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]['charge'];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", $merchantKey)
               ->addBody("amount", $amount)
@@ -116,7 +136,6 @@ class Card {
               ->addBody("narration", $narration)
               ->addBody("responseurl", $responseUrl)
               ->addBody("cardno", $cardNo)
-              ->addBody("cardtype", $cardType)
               ->addBody("cvv", $cvv)
               ->addBody("country", $country)
               ->addBody("expiryyear", $expiryYear)
@@ -134,7 +153,7 @@ class Card {
    * @param  sting $cardType optional parameter. only need this is its a diamond card. pass CardTpes::DIAMOND
    * @return ApiResponse
    */
-  public static function validate($ref, $otp, $cardType = "") {
+  public static function validate($ref, $otp) {
     FlutterValidator::validateClientCredentialsSet();
 
     $key = Flutterwave::getApiKey();
@@ -146,12 +165,11 @@ class Card {
       $encryptedCardType = FlutterEncrypt::encrypt3Des($cardType, $key);
     }
 
-    $resource = self::$resources[Flutterwave::getEnv()]['validate'];
+    $resource = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]['validate'];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->addBody("otp", $encryptedOtp)
               ->addBody("otptransactionidentifier", $encryptedRef)
-              ->addBody("cardtype", $encryptedCardType)
               ->makePostRequest();
     return $resp;
   }
@@ -174,7 +192,7 @@ class Card {
     $currency = FlutterEncrypt::encrypt3Des($currency, $key);
     $country = FlutterEncrypt::encrypt3Des($country, $key);
 
-    $resource = self::$resources[Flutterwave::getEnv()]['preauth'];
+    $resource = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]['preauth'];
     $resp = (new ApiRequest($resource))
               ->addbody("merchantid", Flutterwave::getMerchantKey())
               ->addBody("amount", $amount)
@@ -204,7 +222,7 @@ class Card {
     $amount = FlutterEncrypt::encrypt3Des($amount, $key);
     $country = FlutterEncrypt::encrypt3Des($country, $key);
 
-    $resource = self::$resources[Flutterwave::getEnv()]['capture'];
+    $resource = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]['capture'];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->addBody("trxreference", $authRef)
@@ -235,7 +253,7 @@ class Card {
     $amount = FlutterEncrypt::encrypt3Des($amount, $key);
     $country = FlutterEncrypt::encrypt3Des($country, $key);
 
-    $resource = self::$resources[Flutterwave::getEnv()]['refund'];
+    $resource = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]['refund'];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->addBody("trxreference", $authRef)
@@ -266,7 +284,7 @@ class Card {
     $amount = FlutterEncrypt::encrypt3Des($amount, $key);
     $country = FlutterEncrypt::encrypt3Des($country, $key);
 
-    $resource = self::$resources[Flutterwave::getEnv()]['refund'];
+    $resource = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]['refund'];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->addBody("trxreference", $authRef)
@@ -303,7 +321,7 @@ class Card {
     $responseUrl = FlutterEncrypt::encrypt3Des($responseUrl, $key);
     $merchantKey = Flutterwave::getMerchantKey();
 
-    $resource = self::$resources[Flutterwave::getEnv()]['charge'];
+    $resource = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]['charge'];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", $merchantKey)
               ->addBody("authmodel", $authmodel)
@@ -370,7 +388,7 @@ class Card {
     }
     $merchantKey = Flutterwave::getMerchantKey();
 
-    $resource = self::$resources[Flutterwave::getEnv()]['avs'];
+    $resource = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]['avs'];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", $merchantKey)
               ->addBody("amount", $amount)
@@ -404,7 +422,7 @@ class Card {
   public static function checkStatus($ref) {
     $key = Flutterwave::getApiKey();
     $ref = FlutterEncrypt::encrypt3Des($ref, $key);
-    $resource = self::$resources[Flutterwave::getEnv()]["status"];
+    $resource = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["status"];
     $resp = (new ApiRequest($resource))
               ->addBody("trxreference", $ref)
               ->addBody("merchantid", Flutterwave::getMerchantKey())

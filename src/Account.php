@@ -3,15 +3,29 @@
 class Account {
 
   private static $resources = [
-    "staging" => [
-      "enquiry" => "http://staging1flutterwave.co:8080/pwc/rest/pay/resolveaccount",
-      "charge" => "http://staging1flutterwave.co:8080/pwc/rest/account/pay",
-      "validate" => "http://staging1flutterwave.co:8080/pwc/rest/account/pay/validate"
+    "v1" => [
+      "staging" => [
+        "enquiry" => "http://staging1flutterwave.co:8080/pwc/rest/pay/resolveaccount",
+        "charge" => "http://staging1flutterwave.co:8080/pwc/rest/account/pay",
+        "validate" => "http://staging1flutterwave.co:8080/pwc/rest/account/pay/validate"
+      ],
+      "production" => [
+        "enquiry" => "https://prod1flutterwave.co:8181/pwc/rest/pay/resolveaccount",
+        "charge" => "https://prod1flutterwave.co:8181/pwc/rest/account/pay",
+        "validate" => "https://prod1flutterwave.co:8181/pwc/rest/account/pay/validate"
+      ]
     ],
-    "production" => [
-      "enquiry" => "https://prod1flutterwave.co:8181/pwc/rest/pay/resolveaccount",
-      "charge" => "https://prod1flutterwave.co:8181/pwc/rest/account/pay",
-      "validate" => "https://prod1flutterwave.co:8181/pwc/rest/account/pay/validate"
+    "v2" => [
+      "staging" => [
+        "enquiry" => "https://flutterwavestagingv2.com/pwc/rest/pay/resolveaccount",
+        "charge" => "https://flutterwavestagingv2.com/pwc/rest/account/pay",
+        "validate" => "https://flutterwavestagingv2.com/pwc/rest/account/pay/validate"
+      ],
+      "production" => [
+        "enquiry" => "https://flutterwaveprodv2.com/pwc/rest/pay/resolveaccount",
+        "charge" => "https://flutterwaveprodv2.com/pwc/rest/account/pay",
+        "validate" => "https://flutterwaveprodv2.com/pwc/rest/account/pay/validate"
+      ]
     ]
   ];
 
@@ -26,7 +40,7 @@ class Account {
     $accountNumber = FlutterEncrypt::encrypt3Des($accountNumber, $key);
     $bankCode = FlutterEncrypt::encrypt3Des($bankCode, $key);
 
-    $url = self::$resources[Flutterwave::getEnv()]["enquiry"];
+    $url = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["enquiry"];
     $resp = (new ApiRequest($url))
               ->addBody("recipientaccount", $accountNumber)
               ->addBody("destbankcode", $bankCode)
@@ -68,7 +82,7 @@ class Account {
     $authmodel = FlutterEncrypt::encrypt3Des($authModel, $key);
     $accounttoken = FlutterEncrypt::encrypt3Des($accountToken, $key);
 
-    $url = self::$resources[Flutterwave::getEnv()]["charge"];
+    $url = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["charge"];
     $resp = (new ApiRequest($url))
               ->addBody("narration", $narration)
               ->addBody("accountnumber", $accountNumber)
@@ -103,7 +117,7 @@ class Account {
     $value = FlutterEncrypt::encrypt3Des($value, $key);
     $ref = FlutterEncrypt::encrypt3Des($ref, $key);
 
-    $url = self::$resources[Flutterwave::getEnv()]["validate"];
+    $url = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["validate"];
     $resp = (new ApiRequest($url))
               ->addBody("validateparameter", $parameter)
               ->addBody("validateparametervalue", $value)

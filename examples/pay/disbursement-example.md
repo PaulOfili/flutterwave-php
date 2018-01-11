@@ -13,7 +13,7 @@ use Flutterwave\Currencies;
 $merchantKey = ""; //can be found on flutterwave dev portal
 $apiKey = ""; //can be found on flutterwave dev portal
 $env = "staging"; //this can be production when ready for deployment
-Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env);
+Flutterwave::setMerchantCredentials($merchantKey, $apiKey, $env, $version); //version is optional and can be 1 or 2, when not passed, it defaults to 1
 
 //In order to disburse funds, you need to first link the account you will disburse from
 //You can link as many accounts as you want

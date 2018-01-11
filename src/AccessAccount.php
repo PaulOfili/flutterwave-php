@@ -10,15 +10,29 @@ class AccessAccount {
    * @var [type]
    */
   private static $accountResources = [
-    "staging" => [
-      "initiate" => "http://staging1flutterwave.co:8080/pwc/rest/recurrent/account/",
-      "validate" => "http://staging1flutterwave.co:8080/pwc/rest/recurrent/account/validate/",
-      "charge" => "http://staging1flutterwave.co:8080/pwc/rest/recurrent/account/charge/"
+    "v1" => [
+      "staging" => [
+        "initiate" => "http://staging1flutterwave.co:8080/pwc/rest/recurrent/account/",
+        "validate" => "http://staging1flutterwave.co:8080/pwc/rest/recurrent/account/validate/",
+        "charge" => "http://staging1flutterwave.co:8080/pwc/rest/recurrent/account/charge/"
+      ],
+      "production" => [
+        "initiate" => "https://prod1flutterwave.co:8181/pwc/rest/recurrent/account/",
+        "validate" => "https://prod1flutterwave.co:8181/pwc/rest/recurrent/account/validate/",
+        "charge" => "https://prod1flutterwave.co:8181/pwc/rest/recurrent/account/charge/"
+      ]
     ],
-    "production" => [
-      "initiate" => "https://prod1flutterwave.co:8181/pwc/rest/recurrent/account/",
-      "validate" => "https://prod1flutterwave.co:8181/pwc/rest/recurrent/account/validate/",
-      "charge" => "https://prod1flutterwave.co:8181/pwc/rest/recurrent/account/charge/"
+    "v2" => [
+      "staging" => [
+        "initiate" => "https://flutterwavestagingv2.com/pwc/rest/recurrent/account/",
+        "validate" => "https://flutterwavestagingv2.com/pwc/rest/recurrent/account/validate/",
+        "charge" => "https://flutterwavestagingv2.com/pwc/rest/recurrent/account/charge/"
+      ],
+      "production" => [
+        "initiate" => "https://flutterwaveprodv2.com/pwc/rest/recurrent/account/",
+        "validate" => "https://flutterwaveprodv2.com/pwc/rest/recurrent/account/validate/",
+        "charge" => "https://flutterwaveprodv2.com/pwc/rest/recurrent/account/charge/"
+      ]
     ]
   ];
 
@@ -33,7 +47,7 @@ class AccessAccount {
     $key = Flutterwave::getApiKey();
     $accountNumber = FlutterEncrypt::encrypt3Des($accountNumber, $key);
 
-    $resource = self::$accountResources[Flutterwave::getEnv()]["initiate"];
+    $resource = self::$accountResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["initiate"];
     $resp = (new ApiRequest($resource))
               ->addBody("accountNumber", $accountNumber)
               ->addBody("merchantid", Flutterwave::getMerchantKey())
@@ -60,7 +74,7 @@ class AccessAccount {
     $billingAmount = FlutterEncrypt::encrypt3Des($billingAmount, $key);
     $narration = FlutterEncrypt::encrypt3Des($narration, $key);
 
-    $resource = self::$accountResources[Flutterwave::getEnv()]['validate'];
+    $resource = self::$accountResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]['validate'];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->addBody("otp", $otp)
@@ -87,7 +101,7 @@ class AccessAccount {
     $amount = FlutterEncrypt::encrypt3Des($amount, $key);
     $narration = FlutterEncrypt::encrypt3Des($narration, $key);
 
-    $resource = self::$accountResources[Flutterwave::getEnv()]["charge"];
+    $resource = self::$accountResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["charge"];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->addBody("accountToken", $token)

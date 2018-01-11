@@ -10,19 +10,37 @@ class Disbursement {
 
   //@var array resources
   private static $disburseResources = [
-    "staging" => [
-      "link" => "http://staging1flutterwave.co:8080/pwc/rest/pay/linkaccount/",
-      "validate" => "http://staging1flutterwave.co:8080/pwc/rest/pay/linkaccount/validate/",
-      "getLinkedAccounts" => "http://staging1flutterwave.co:8080/pwc/rest/pay/getlinkedaccounts",
-      "send" => "http://staging1flutterwave.co:8080/pwc/rest/pay/send",
-      "unlink" => "http://staging1flutterwave.co:8080/pwc/rest/pay/unlinkaccount"
+    "v1" => [
+      "staging" => [
+        "link" => "http://staging1flutterwave.co:8080/pwc/rest/pay/linkaccount/",
+        "validate" => "http://staging1flutterwave.co:8080/pwc/rest/pay/linkaccount/validate/",
+        "getLinkedAccounts" => "http://staging1flutterwave.co:8080/pwc/rest/pay/getlinkedaccounts",
+        "send" => "http://staging1flutterwave.co:8080/pwc/rest/pay/send",
+        "unlink" => "http://staging1flutterwave.co:8080/pwc/rest/pay/unlinkaccount"
+      ],
+      "production" => [
+        "link" => "https://prod1flutterwave.co:8181/pwc/rest/pay/linkaccount/",
+        "validate" => "https://prod1flutterwave.co:8181/pwc/rest/pay/linkaccount/validate/",
+        "getLinkedAccounts" => "https://prod1flutterwave.co:8181/pwc/rest/pay/getlinkedaccounts",
+        "send" => "https://prod1flutterwave.co:8181/pwc/rest/pay/send",
+        "unlink" => "https://prod1flutterwave.co:8181/pwc/rest/pay/unlinkaccount"
+      ]
     ],
-    "production" => [
-      "link" => "https://prod1flutterwave.co:8181/pwc/rest/pay/linkaccount/",
-      "validate" => "https://prod1flutterwave.co:8181/pwc/rest/pay/linkaccount/validate/",
-      "getLinkedAccounts" => "https://prod1flutterwave.co:8181/pwc/rest/pay/getlinkedaccounts",
-      "send" => "https://prod1flutterwave.co:8181/pwc/rest/pay/send",
-      "unlink" => "https://prod1flutterwave.co:8181/pwc/rest/pay/unlinkaccount"
+    "v2" => [
+      "staging" => [
+        "link" => "https://flutterwavestagingv2.com/pwc/rest/pay/linkaccount/",
+        "validate" => "https://flutterwavestagingv2.com/pwc/rest/pay/linkaccount/validate/",
+        "getLinkedAccounts" => "https://flutterwavestagingv2.com/pwc/rest/pay/getlinkedaccounts",
+        "send" => "https://flutterwavestagingv2.com/pwc/rest/pay/send",
+        "unlink" => "https://flutterwavestagingv2.com/pwc/rest/pay/unlinkaccount"
+      ],
+      "production" => [
+        "link" => "https://flutterwaveprodv2.com/pwc/rest/pay/linkaccount/",
+        "validate" => "https://flutterwaveprodv2.com/pwc/rest/pay/linkaccount/validate/",
+        "getLinkedAccounts" => "https://flutterwaveprodv2.com/pwc/rest/pay/getlinkedaccounts",
+        "send" => "https://flutterwaveprodv2.com/pwc/rest/pay/send",
+        "unlink" => "https://flutterwaveprodv2.com/pwc/rest/pay/unlinkaccount"
+      ]
     ]
   ];
 
@@ -36,7 +54,7 @@ class Disbursement {
 
     $encryptedAccountNo = FlutterEncrypt::encrypt3Des($accountno, Flutterwave::getApiKey());
     
-    $resource = self::$disburseResources[Flutterwave::getEnv()]["link"];
+    $resource = self::$disburseResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["link"];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->addBody("accountnumber", $encryptedAccountNo)
@@ -60,7 +78,7 @@ class Disbursement {
     $encryptedRelatedReference = FlutterEncrypt::encrypt3Des($relatedreference, $key);
     $encryptedOtpType = FlutterEncrypt::encrypt3Des($otptype, $key);
 
-    $resource = self::$disburseResources[Flutterwave::getEnv()]["validate"];
+    $resource = self::$disburseResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["validate"];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->addBody("otp", $encryptedOtp)
@@ -78,7 +96,7 @@ class Disbursement {
   public static function getLinkedAccounts() {
     FlutterValidator::validateClientCredentialsSet();
 
-    $resource = self::$disburseResources[Flutterwave::getEnv()]["getLinkedAccounts"];
+    $resource = self::$disburseResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["getLinkedAccounts"];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->makePostRequest();
@@ -113,7 +131,7 @@ class Disbursement {
     $encryptedcountry = FlutterEncrypt::encrypt3Des($destination["country"], $key);
     $encryptedcurrency = FlutterEncrypt::encrypt3Des($destination["currency"], $key);
 
-    $resource = self::$disburseResources[Flutterwave::getEnv()]["send"];
+    $resource = self::$disburseResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["send"];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->addBody("accounttoken", $encryptedAccountToken)
@@ -143,7 +161,7 @@ class Disbursement {
     $encryptedAccountNumber = FlutterEncrypt::encrypt3Des($accountnumber, $key);
     $encryptedCountry = FlutterEncrypt::encrypt3Des($country, $key);
 
-    $resource = self::$disburseResources[Flutterwave::getEnv()]["unlink"];
+    $resource = self::$disburseResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["unlink"];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->addBody("accountnumber", $encryptedAccountNumber)

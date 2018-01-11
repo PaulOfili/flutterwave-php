@@ -10,17 +10,33 @@ class Ach {
    * @var [type]
    */
   private static $achResources = [
-    "staging" => [
-      "getInstitutions" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/institutions/",
-      "getInstitutionById" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/institutions/id/",
-      "addUser" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/adduser/",
-      "chargeEach" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/chargeach"
+    "v1" => [
+      "staging" => [
+        "getInstitutions" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/institutions/",
+        "getInstitutionById" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/institutions/id/",
+        "addUser" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/adduser/",
+        "chargeEach" => "http://staging1flutterwave.co:8080/pwc/rest/card/mvva/chargeach"
+      ],
+      "production" => [
+        "getInstitutions" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/institutions/",
+        "getInstitutionById" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/institutions/id/",
+        "addUser" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/adduser/",
+        "chargeEach" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/chargeach"
+      ]
     ],
-    "production" => [
-      "getInstitutions" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/institutions/",
-      "getInstitutionById" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/institutions/id/",
-      "addUser" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/adduser/",
-      "chargeEach" => "https://prod1flutterwave.co:8181/pwc/rest/card/mvva/chargeach"
+    "v2" => [
+      "staging" => [
+        "getInstitutions" => "https://flutterwavestagingv2.com/pwc/rest/card/mvva/institutions/",
+        "getInstitutionById" => "https://flutterwavestagingv2.com/pwc/rest/card/mvva/institutions/id/",
+        "addUser" => "https://flutterwavestagingv2.com/pwc/rest/card/mvva/adduser/",
+        "chargeEach" => "https://flutterwavestagingv2.com/pwc/rest/card/mvva/chargeach"
+      ],
+      "production" => [
+        "getInstitutions" => "https://flutterwaveprodv2.com/pwc/rest/card/mvva/institutions/",
+        "getInstitutionById" => "https://flutterwaveprodv2.com/pwc/rest/card/mvva/institutions/id/",
+        "addUser" => "https://flutterwaveprodv2.com/pwc/rest/card/mvva/adduser/",
+        "chargeEach" => "https://flutterwaveprodv2.com/pwc/rest/card/mvva/chargeach"
+      ]
     ]
   ];
 
@@ -31,7 +47,7 @@ class Ach {
   public static function getInstitutions() {
     FlutterValidator::validateClientCredentialsSet();
 
-    $resource = self::$achResources[Flutterwave::getEnv()]["getInstitutions"];
+    $resource = self::$achResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["getInstitutions"];
     $resp = (new ApiRequest($resource))
               ->addBody("merchantid", Flutterwave::getMerchantKey())
               ->makePostRequest();
@@ -48,7 +64,7 @@ class Ach {
 
     $encryptedInstitutionId = FlutterEncrypt::encrypt3Des($institutionId, Flutterwave::getApiKey());
 
-    $resource = self::$achResources[Flutterwave::getEnv()]["getInstitutionById"];
+    $resource = self::$achResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["getInstitutionById"];
     $resp = (new ApiRequest($resource))
               ->addBody("institutionid", $encryptedInstitutionId)
               ->addBody("merchantid", Flutterwave::getMerchantKey())
@@ -75,7 +91,7 @@ class Ach {
     $encryptedEmail = FlutterEncrypt::encrypt3Des($user["email"], $key);
     $encryptedInstitution = FlutterEncrypt::encrypt3Des($user["institution"], $key);
 
-    $resource = self::$achResources[Flutterwave::getEnv()]["addUser"];
+    $resource = self::$achResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["addUser"];
     $resp = (new ApiRequest($resource))
               ->addBody("username", $encryptedUsername)
               ->addBody("password", $encryptedPassword)
@@ -110,7 +126,7 @@ class Ach {
     $encryptedAmount = FlutterEncrypt::encrypt3Des($request["amount"], $key);
     $encryptedCurrency = FlutterEncrypt::encrypt3Des($request["currency"], $key);
 
-    $resource = self::$achResources[Flutterwave::getEnv()]["chargeEach"];
+    $resource = self::$achResources[Flutterwave::getVersionName()][Flutterwave::getEnv()]["chargeEach"];
     $resp = (new ApiRequest($resource))
               ->addBody("publictoken", $encryptedPublicToken)
               ->addBody("accountid", $encryptedAccountId)

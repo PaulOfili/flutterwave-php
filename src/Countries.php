@@ -7,7 +7,7 @@ namespace Flutterwave;
 class Countries {
 
   /**
-   * @var string code for Nigeria
+   * @var string code for countries
    */
   const NIGERIA = "NG";
 
@@ -18,4 +18,6 @@ class Countries {
   const UNITED_KINGDOM = "UK";
 
   const UNITED_STATES = "US";
+
+  const SOUTH_AFRICA = "ZA";
 }

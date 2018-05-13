@@ -124,6 +124,22 @@ class Card {
       $bvn = FlutterEncrypt::encrypt3Des($card['bvn'], $key);
     }
     $cvv = FlutterEncrypt::encrypt3Des($card['cvv'], $key);
+    if(isset($card['billing_address']) && !empty($card['billing_address'])){
+      $billingAddress = FlutterEncrypt::encrypt3Des($card['billing_address'], $key);
+    }
+    if(isset($card['billing_city']) && !empty($card['billing_city'])){
+      $billingCity = FlutterEncrypt::encrypt3Des($card['billing_city'], $key);
+    }
+    if(isset($card['billing_state']) && !empty($card['billing_state'])){
+      $billingState = FlutterEncrypt::encrypt3Des($card['billing_state'], $key);
+    }
+    if(isset($card['billing_zip']) && !empty($card['billing_zip'])){
+      $billingZip = FlutterEncrypt::encrypt3Des($card['billing_zip'], $key);
+    }
+    if(isset($card['billing_country']) && !empty($card['billing_country'])){
+      $billingCountry = FlutterEncrypt::encrypt3Des($card['billing_country'], $key);
+    }
+    
     $merchantKey = Flutterwave::getMerchantKey();
 
     $resource = self::$resources[Flutterwave::getVersionName()][Flutterwave::getEnv()]['charge'];
@@ -140,6 +156,11 @@ class Card {
               ->addBody("country", $country)
               ->addBody("expiryyear", $expiryYear)
               ->addBody("expirymonth", $expiryMonth)
+              ->addBody("billingaddress", $billingAddress)
+              ->addBody("billingcity", $billingCity)
+              ->addBody("billingstate", $billingState)
+              ->addBody("billingzip", $billingZip)
+              ->addBody("billingcountry", $billingCountry)
               ->addBody("pin", $pin)
               ->addBody("bvn", $bvn)
               ->makePostRequest();
